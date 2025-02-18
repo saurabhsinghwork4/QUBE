@@ -33,9 +33,10 @@ from PyPDF2 import PdfReader
 # Set OpenAI API key (Ensure to set this environment variable before running)
 openai.api_key = "OPENAI_API_KEY"
 
+
 # Start ngrok tunnel
-public_url = ngrok.connect(7860).public_url
-print(f"Public URL: {public_url}")
+#public_url = ngrok.connect(7860).public_url
+#print(f"Public URL: {public_url}")
 
 # Function to generate course outcomes
 def generate_course_outcomes(syllabus, Num_CO):
