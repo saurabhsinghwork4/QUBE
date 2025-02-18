@@ -1,0 +1,16 @@
+!ngrok kill
+!pip install openai==0.28
+!pip install pyngrok
+!pip install pyngrok gradio flask openai
+!wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
+!unzip ngrok-stable-linux-amd64.zip
+!pip install flask flask-ngrok openai
+!pip install xlsxwriter
+!pip install gradio
+# Install ngrok
+!pip install pymupdf
+!pip install PyPDF2==2.12.1
+!apt-get install -y ngrok
+
+# Set up ngrok authentication (Replace with your actual auth token)
+!ngrok authtoken 2sCMmR3HJGWtXHTBOqSSElLFKKO_V7K9o9SVZnR6TC5tD6ki
