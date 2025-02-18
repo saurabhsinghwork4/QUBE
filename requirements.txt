@@ -7,3 +7,8 @@ xlsxwriter
 pymupdf
 PyPDF2==2.12.1
 gunicorn  # Required for deployment on Render
+google
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+google-api-python-client
