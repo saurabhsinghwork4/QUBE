@@ -28,7 +28,6 @@ import openai
 import os
 from pyngrok import ngrok
 import io
-from google.colab import files
 from PyPDF2 import PdfReader
 
 # Set OpenAI API key (Ensure to set this environment variable before running)
