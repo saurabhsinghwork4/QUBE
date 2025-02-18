@@ -1055,5 +1055,5 @@ def ui():
 
 # Launch Gradio app
 demo = ui()
-demo.launch(share=True, inline=False, debug=True, server_name="0.0.0.0", server_port=80)
+demo.launch(share=True, inline=False, debug=True, server_name="0.0.0.0", server_port=8080)
 
