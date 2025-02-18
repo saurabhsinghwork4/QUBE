@@ -58,7 +58,7 @@ def generate_lesson_plan(course_code, course_title, syllabus, num_lectures, CO):
     # Save Course Outcomes to an Excel file
     co_data = {"Course Outcomes": CO.split("\n")}  # Convert text to list
     co_df = pd.DataFrame(co_data)
-    co_file_path = f"/tmp/QUBE_Data/CO/Course_Outcomes_{course_code}.xlsx"
+    co_file_path = f"/tmp/Course_Outcomes_{course_code}.xlsx"
     co_df.to_excel(co_file_path, index=False)
 
     # Prompt to generate structured lesson plan
@@ -100,7 +100,7 @@ def generate_lesson_plan(course_code, course_title, syllabus, num_lectures, CO):
 
         # Save lesson plan to an Excel file
         #lesson_df = pd.DataFrame(data, columns=["Lesson No.", "Topic", "Topic Learning Outcome", "Course Outcome", "Socratic Question"])
-        lesson_file_path = f"/tmp/QUBE_Data/LP/Lesson_Plan_{course_code}.xlsx"
+        lesson_file_path = f"/tmp/Lesson_Plan_{course_code}.xlsx"
         lesson_df.to_excel(lesson_file_path, index=False, engine="openpyxl")
 
         return co_file_path, lesson_file_path  # Return both file paths
@@ -240,7 +240,7 @@ def generate_exam_questions_complete_Beginner(course_code, course_title, lesson_
         """
     ]
 
-    output_file = f"/tmp/QUBE_Data/QB/QBBeginner_{course_code}.xlsx"
+    output_file = f"/tmp/QBBeginner_{course_code}.xlsx"
 
     # Find last Question_Number if file exists
     """
@@ -295,7 +295,7 @@ def generate_exam_questions_complete_Beginner(course_code, course_title, lesson_
 #    df = pd.read_csv(csv_data, sep=",", quotechar='"', on_bad_lines='skip')
 
     # Save DataFrame as an Excel file
-#    excel_filename = f"/tmp/QUBE_Data/CO/QB_excel{course_code}.xlsx"
+#    excel_filename = f"/tmp/QB_excel{course_code}.xlsx"
     final_df.to_excel(output_file, index=False, engine="openpyxl")
 
     return output_file
@@ -385,7 +385,7 @@ def generate_exam_questions_complete_Intermediate(course_code, course_title, les
         """
     ]
 
-    output_file = f"/tmp/QUBE_Data/QB/QBIntermediate_{course_code}.xlsx"
+    output_file = f"/tmp/QBIntermediate_{course_code}.xlsx"
 
     # Find last Question_Number if file exists
     """
@@ -440,7 +440,7 @@ def generate_exam_questions_complete_Intermediate(course_code, course_title, les
 #    df = pd.read_csv(csv_data, sep=",", quotechar='"', on_bad_lines='skip')
 
     # Save DataFrame as an Excel file
-#    excel_filename = f"/tmp/QUBE_Data/CO/QB_excel{course_code}.xlsx"
+#    excel_filename = f"/tmp/QB_excel{course_code}.xlsx"
     final_df.to_excel(output_file, index=False, engine="openpyxl")
 
     return output_file
@@ -485,7 +485,7 @@ def generate_exam_questions_complete_Intermediate_Advance(course_code, course_ti
         """
     ]
 
-    output_file = f"/tmp/QUBE_Data/QB/QBInt_Adv_{course_code}.xlsx"
+    output_file = f"/tmp/QBInt_Adv_{course_code}.xlsx"
 
     # Find last Question_Number if file exists
     """
@@ -540,7 +540,7 @@ def generate_exam_questions_complete_Intermediate_Advance(course_code, course_ti
 #    df = pd.read_csv(csv_data, sep=",", quotechar='"', on_bad_lines='skip')
 
     # Save DataFrame as an Excel file
-#    excel_filename = f"/tmp/QUBE_Data/CO/QB_excel{course_code}.xlsx"
+#    excel_filename = f"/tmp/QB_excel{course_code}.xlsx"
     final_df.to_excel(output_file, index=False, engine="openpyxl")
 
     return output_file
@@ -568,7 +568,7 @@ def generate_exam_questions_complete_Advanced_Complex_prob(course_code, course_t
         """
     ]
 
-    output_file = f"/tmp/QUBE_Data/QB/QBAdvCP_{course_code}.xlsx"
+    output_file = f"/tmp/QBAdvCP_{course_code}.xlsx"
 
     # Find last Question_Number if file exists
     """
@@ -623,7 +623,7 @@ def generate_exam_questions_complete_Advanced_Complex_prob(course_code, course_t
 #    df = pd.read_csv(csv_data, sep=",", quotechar='"', on_bad_lines='skip')
 
     # Save DataFrame as an Excel file
-#    excel_filename = f"/tmp/QUBE_Data/CO/QB_excel{course_code}.xlsx"
+#    excel_filename = f"/tmp/QB_excel{course_code}.xlsx"
     final_df.to_excel(output_file, index=False, engine="openpyxl")
 
     return output_file
@@ -915,7 +915,7 @@ def ui():
                     finalized_course_outcomes.extend([""] * (max_length - len(finalized_course_outcomes)))
 
                     # Define file path based on course_code
-                    file_path = f"/tmp/QUBE_Data/QB/{course_code}.xlsx"
+                    file_path = f"/tmp/{course_code}.xlsx"
 
                     # Check if file exists and determine the next sequence number
                     if os.path.exists(file_path):
@@ -1022,7 +1022,7 @@ def ui():
                   merged_df = pd.concat([df_beginner, df_intermediate, df_Int_adv, df_AdvCP], ignore_index=True)
                   merged_df.iloc[:, 0] = range(1, len(merged_df) + 1)
                   # Define the output file path
-                  merged_excel_filepath = f"/tmp/QUBE_Data/complete_QB/{course_code}.xlsx"
+                  merged_excel_filepath = f"/tmp/{course_code}.xlsx"
 
                   # Save the merged DataFrame into a **single worksheet**
                   merged_df.to_excel(merged_excel_filepath, sheet_name="All Questions", index=False)
