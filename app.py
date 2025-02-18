@@ -9,7 +9,6 @@ Original file is located at
 
 # Install necessary libraries
 
-
 # Import required libraries
 #from pyngrok import ngrok
 #import gradio as gr
@@ -18,6 +17,8 @@ Original file is located at
 
 # Set the OpenAI API key
 
+from google.colab import drive
+drive.mount('/content/drive')
 
 #17022025, start 05:00 AM, ends 01:31 PM working merged excel files
 
@@ -28,15 +29,15 @@ import openai
 import os
 from pyngrok import ngrok
 import io
+from google.colab import files
 from PyPDF2 import PdfReader
 
 # Set OpenAI API key (Ensure to set this environment variable before running)
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-
 # Start ngrok tunnel
-#public_url = ngrok.connect(7860).public_url
-#print(f"Public URL: {public_url}")
+public_url = ngrok.connect(7860).public_url
+print(f"Public URL: {public_url}")
 
 # Function to generate course outcomes
 def generate_course_outcomes(syllabus, Num_CO):
@@ -45,7 +46,7 @@ def generate_course_outcomes(syllabus, Num_CO):
     for page in reader.pages:
         text += page.extract_text()
     syllabus_text = text
-    prompt = f""" From the following syllabus: {syllabus_text} , extract topics of the subject, also remove the headinds and generate **exactly {Num_CO} course outcomes**
+    prompt = f""" From the following syllabus: {syllabus_text} , extract topics of the subject, also remove the headinds and generate **exactly {Num_CO}** course outcomes
     for the subject suitable for undergraduate students based on the extracted topics and label them as CO1, CO2, CO3, CO4, CO5, CO6.
     Make sure to cover all the topics to define course outcomes in the syllabus.
     ** strict Format (without column headers)** do not output before of after the course outcomes.
@@ -72,7 +73,7 @@ def generate_lesson_plan(course_code, course_title, syllabus, num_lectures, CO):
     # Save Course Outcomes to an Excel file
     co_data = {"Course Outcomes": CO.split("\n")}  # Convert text to list
     co_df = pd.DataFrame(co_data)
-    co_file_path = f"/temp/Course_Outcomes_{course_code}.xlsx"
+    co_file_path = f"/temp/QUBE_Data/CO/Course_Outcomes_{course_code}.xlsx"
     co_df.to_excel(co_file_path, index=False)
 
     # Prompt to generate structured lesson plan
@@ -114,7 +115,7 @@ def generate_lesson_plan(course_code, course_title, syllabus, num_lectures, CO):
 
         # Save lesson plan to an Excel file
         #lesson_df = pd.DataFrame(data, columns=["Lesson No.", "Topic", "Topic Learning Outcome", "Course Outcome", "Socratic Question"])
-        lesson_file_path = f"/temp/Lesson_Plan_{course_code}.xlsx"
+        lesson_file_path = f"/temp/QUBE_Data/LP/Lesson_Plan_{course_code}.xlsx"
         lesson_df.to_excel(lesson_file_path, index=False, engine="openpyxl")
 
         return co_file_path, lesson_file_path  # Return both file paths
@@ -254,7 +255,7 @@ def generate_exam_questions_complete_Beginner(course_code, course_title, lesson_
         """
     ]
 
-    output_file = f"/temp/QBBeginner_{course_code}.xlsx"
+    output_file = f"/temp/QUBE_Data/QB/QBBeginner_{course_code}.xlsx"
 
     # Find last Question_Number if file exists
     """
@@ -309,7 +310,7 @@ def generate_exam_questions_complete_Beginner(course_code, course_title, lesson_
 #    df = pd.read_csv(csv_data, sep=",", quotechar='"', on_bad_lines='skip')
 
     # Save DataFrame as an Excel file
-#    excel_filename = f"/content/drive/MyDrive/Question_bank_dataset/QUBE_Data/CO/QB_excel{course_code}.xlsx"
+#    excel_filename = f"/temp/QUBE_Data/CO/QB_excel{course_code}.xlsx"
     final_df.to_excel(output_file, index=False, engine="openpyxl")
 
     return output_file
@@ -399,7 +400,7 @@ def generate_exam_questions_complete_Intermediate(course_code, course_title, les
         """
     ]
 
-    output_file = f"/test/QBIntermediate_{course_code}.xlsx"
+    output_file = f"/temp/QUBE_Data/QB/QBIntermediate_{course_code}.xlsx"
 
     # Find last Question_Number if file exists
     """
@@ -454,7 +455,7 @@ def generate_exam_questions_complete_Intermediate(course_code, course_title, les
 #    df = pd.read_csv(csv_data, sep=",", quotechar='"', on_bad_lines='skip')
 
     # Save DataFrame as an Excel file
-#    excel_filename = f"/content/drive/MyDrive/Question_bank_dataset/QUBE_Data/CO/QB_excel{course_code}.xlsx"
+#    excel_filename = f"/temp/QUBE_Data/CO/QB_excel{course_code}.xlsx"
     final_df.to_excel(output_file, index=False, engine="openpyxl")
 
     return output_file
@@ -499,7 +500,7 @@ def generate_exam_questions_complete_Intermediate_Advance(course_code, course_ti
         """
     ]
 
-    output_file = f"/temp/QBInt_Adv_{course_code}.xlsx"
+    output_file = f"/temp/QUBE_Data/QB/QBInt_Adv_{course_code}.xlsx"
 
     # Find last Question_Number if file exists
     """
@@ -554,7 +555,7 @@ def generate_exam_questions_complete_Intermediate_Advance(course_code, course_ti
 #    df = pd.read_csv(csv_data, sep=",", quotechar='"', on_bad_lines='skip')
 
     # Save DataFrame as an Excel file
-#    excel_filename = f"/content/drive/MyDrive/Question_bank_dataset/QUBE_Data/CO/QB_excel{course_code}.xlsx"
+#    excel_filename = f"/temp/QUBE_Data/CO/QB_excel{course_code}.xlsx"
     final_df.to_excel(output_file, index=False, engine="openpyxl")
 
     return output_file
@@ -582,7 +583,7 @@ def generate_exam_questions_complete_Advanced_Complex_prob(course_code, course_t
         """
     ]
 
-    output_file = f"/temp/QBAdvCP_{course_code}.xlsx"
+    output_file = f"/temp/QUBE_Data/QB/QBAdvCP_{course_code}.xlsx"
 
     # Find last Question_Number if file exists
     """
@@ -637,7 +638,7 @@ def generate_exam_questions_complete_Advanced_Complex_prob(course_code, course_t
 #    df = pd.read_csv(csv_data, sep=",", quotechar='"', on_bad_lines='skip')
 
     # Save DataFrame as an Excel file
-#    excel_filename = f"/test/QB_excel{course_code}.xlsx"
+#    excel_filename = f"/temp/QUBE_Data/CO/QB_excel{course_code}.xlsx"
     final_df.to_excel(output_file, index=False, engine="openpyxl")
 
     return output_file
@@ -715,7 +716,7 @@ def ui():
                 course_title_input = gr.Textbox(label="Course Title", interactive=True)
                 syllabus_input = gr.File(label="Upload Syllabus (PDF or DOCX)")
                 num_lectures_input = gr.Dropdown( label="Enter Number of Lectures", choices=[28, 42, 56, 70], value=42)
-                Num_CO_dropdown_Input = gr.Dropdown(choices=[4, 5, 6], label="Select number of COs required")
+                Num_CO_dropdown_Input = gr.Dropdown(choices=[4, 5, 6], label="Select number of COs required", value= 4)
                 outcome_button = gr.Button("Generate/Regenerate Course Outcomes")
                 outcomes_text_output = gr.Textbox(label="Generated Course Outcomes", interactive=True)
                 #co_file_output = gr.File(label="Download Course Outcomes")  # Now correctly linked
@@ -929,7 +930,7 @@ def ui():
                     finalized_course_outcomes.extend([""] * (max_length - len(finalized_course_outcomes)))
 
                     # Define file path based on course_code
-                    file_path = f"/test/QB/{course_code}.xlsx"
+                    file_path = f"/temp/QUBE_Data/QB/{course_code}.xlsx"
 
                     # Check if file exists and determine the next sequence number
                     if os.path.exists(file_path):
@@ -1036,7 +1037,7 @@ def ui():
                   merged_df = pd.concat([df_beginner, df_intermediate, df_Int_adv, df_AdvCP], ignore_index=True)
                   merged_df.iloc[:, 0] = range(1, len(merged_df) + 1)
                   # Define the output file path
-		  merged_excel_filepath = f"/tmp/mergedQB/{course_code}.xlsx"
+                  merged_excel_filepath = f"/temp/QUBE_Data/complete_QB/{course_code}.xlsx"
 
                   # Save the merged DataFrame into a **single worksheet**
                   merged_df.to_excel(merged_excel_filepath, sheet_name="All Questions", index=False)
@@ -1055,5 +1056,1045 @@ def ui():
 
 # Launch Gradio app
 demo = ui()
-demo.launch(share=True, inline=False, debug=True, server_name="0.0.0.0", server_port=8080)
+demo.launch(share=True, inline=False, debug=True)
+
+
+
+#18022025, start 05:00 AM, ends 01:31 PM working merged excel files
+
+import gradio as gr
+import pandas as pd
+import re
+import openai
+import os
+from pyngrok import ngrok
+import io
+from google.colab import files
+from PyPDF2 import PdfReader
+
+# Set OpenAI API key (Ensure to set this environment variable before running)
+openai.api_key = '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'
+
+# Start ngrok tunnel
+public_url = ngrok.connect(7860).public_url
+print(f"Public URL: {public_url}")
+
+# Function to generate course outcomes
+def generate_course_outcomes(syllabus, Num_CO):
+    reader = PdfReader(syllabus)
+    text = ""
+    for page in reader.pages:
+        text += page.extract_text()
+    syllabus_text = text
+    prompt = f""" From the following syllabus: {syllabus_text} , extract topics of the subject, also remove the headinds and generate **exactly {Num_CO}** course outcomes
+    for the subject suitable for undergraduate students based on the extracted topics and label them as CO1, CO2, CO3, CO4, CO5, CO6.
+    Make sure to cover all the topics to define course outcomes in the syllabus.
+    ** strict Format (without column headers)** do not output before of after the course outcomes.
+    [CO]: [Course Outcome]
+    """
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[{"role": "system", "content": "You are an expert in academic curriculum design."},
+                      {"role": "user", "content": prompt}],
+            temperature=0.5,
+            max_tokens=1000
+        )
+        return response["choices"][0]["message"]["content"].strip()
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+# Function to generate lesson plan
+import openai
+import pandas as pd
+import re
+
+def generate_lesson_plan(course_code, course_title, syllabus, num_lectures, CO):
+    # Save Course Outcomes to an Excel file
+    co_data = {"Course Outcomes": CO.split("\n")}  # Convert text to list
+    co_df = pd.DataFrame(co_data)
+    co_file_path = f"/temp/QUBE_Data/CO/Course_Outcomes_{course_code}.xlsx"
+    co_df.to_excel(co_file_path, index=False)
+
+    # Prompt to generate structured lesson plan
+    prompt = f"""
+    Generate a structured lesson plan for exactly {num_lectures} lessons, numbered **sequentially starting from 1 to {num_lectures}** without skipping any number. Each 1-hour lesson should include:
+    1. Lesson Number (Ensure it is included explicitly)
+    2. Topic
+    3. Topic Learning Outcome: Use action verbs (Apply, Identify, Recognize, Explain, Describe, Compare, Synthesize, Interpret, Justify, Implement, Analyse, Evaluate, Create). Do not use "Understand".
+    4. Course Outcome: Print only CO number from the following list: {CO} (Example: CO1, CO2, etc.)
+    5. Socratic Question: Use following action verbs to generate **open ended socratic questions** (Apply, Identify, Recognize, Explain, Describe, Compare, Synthesize, Interpret, Justify, Implement, Analyse, Evaluate, Create, Understand, what, how, can you).
+
+    Format the response in **strict CSV format** :
+    "[Lesson Number]","[Topic]","[Topic Learning Outcome]","[Course Outcome]","[Socratic Question]".
+    """
+
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[{"role": "system", "content": "You are an expert in academic curriculum design."},
+                      {"role": "user", "content": prompt}],
+            temperature=0.5,
+            max_tokens=4000
+        )
+
+        content = response["choices"][0]["message"]["content"].strip()
+        # Convert AI response into structured data
+        #lesson_plan_lines = content.split("\n")
+        #data = [line.split(",") for line in lesson_plan_lines if len(line.split(",")) == 5]
+        # Ensure correct number of lessons
+        #lesson_numbers = [int(re.search(r"^\d+", line).group()) for line in lesson_plan_lines if re.search(r"^\d+", line)]
+        #missing_numbers = set(range(1, num_lectures + 1)) - set(lesson_numbers)
+        #if missing_numbers:
+         #   print("Missing lesson numbers:", missing_numbers)
+         #   return f"Error: Missing lesson numbers {missing_numbers}"
+
+        lesson_df = pd.read_csv(io.StringIO(content), sep=",",
+                        names=["Lesson Number", "Topic", "Topic Learning Outcome", "Course Outcome", "Socratic Question"],
+                        on_bad_lines='skip', engine='python', quotechar='"')
+
+        # Save lesson plan to an Excel file
+        #lesson_df = pd.DataFrame(data, columns=["Lesson No.", "Topic", "Topic Learning Outcome", "Course Outcome", "Socratic Question"])
+        lesson_file_path = f"/temp/QUBE_Data/LP/Lesson_Plan_{course_code}.xlsx"
+        lesson_df.to_excel(lesson_file_path, index=False, engine="openpyxl")
+
+        return co_file_path, lesson_file_path  # Return both file paths
+
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+# Function to generate exam questions
+def generate_exam_questions(lesson_plan_file, num_lessons, exam_name, blooms_level, difficulty_level, learner_level, marks, num_questions, question_type, subtype, numerical_percentage):
+    # Read Lesson Plan
+    lesson_plan = pd.read_excel(lesson_plan_file.name)
+    lesson_per_week = num_lessons / 14
+
+    # Define question range based on exam type
+    if exam_name == 'IA1':
+        Question_Range = f'1 to {3 * lesson_per_week}'
+    elif exam_name == 'MTE':
+        Question_Range = f'1 to {7 * lesson_per_week}'
+    elif exam_name == 'IA2':
+        Question_Range = f'{7 * lesson_per_week + 1} to {10 * lesson_per_week}'
+    else:  # ETE
+        Question_Range = f'1 to {14 * lesson_per_week}'
+
+    # Create prompt
+    prompt = f"""
+      Generate {num_questions+1} exam questions with very short key-point answers, based on:
+      - **Bloom’s Level**: {blooms_level}, **Difficulty**: {difficulty_level}, **Learner Level**: {learner_level}
+      - **Marks per Question**: {marks}, **Numerical Questions**: {numerical_percentage}%
+      - **Question Type**: '{question_type}', **Subtype**: '{subtype}'
+      - Use topics from **Column B (Topic), Rows {Question_Range}** in {lesson_plan}.
+      - Include **Course Outcomes** from **Column D (Corresponding Course Outcome)**.
+      - Ensure each question aligns with Bloom’s level **{blooms_level}** using the appropriate action verbs.
+
+      ### **Format:**
+      Q: [Question] : [Course Outcome]
+      A: [Answer]
+      Q: [Question] : [Course Outcome]
+      A: [Answer]
+      ...
+    """
+
+    try:
+        # OpenAI API Call
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[{"role": "system", "content": "You are an expert in exam question generation."},
+                      {"role": "user", "content": prompt}],
+            temperature=0.5,
+            max_tokens=4000
+        )
+
+        # Extract response text
+        questions_text = response["choices"][0]["message"]["content"].strip()
+
+        # Use regex to extract questions, course outcomes, and answers
+        question_pattern = re.findall(r"(Q\d+): (.*?): (.*?)\n(A\d+): (.*?)\n", questions_text)
+
+        # Extract separate lists
+        q_numbers = [q[0] for q in question_pattern]  # Q1, Q2, ...
+        questions = [q[1].strip() for q in question_pattern]  # Actual questions
+        course_outcomes = [q[2].strip() for q in question_pattern]  # Course outcomes
+        a_numbers = [q[3] for q in question_pattern]  # A1, A2, ...
+        answers = [q[4].strip() for q in question_pattern]  # Actual answers
+        return q_numbers, questions, course_outcomes, a_numbers, answers  # Returning as separate lists
+
+    except Exception as e:
+        return [f"Error: {str(e)}"], [], []  # Return empty lists in case of error
+
+
+def generate_exam_questions_complete_Beginner(course_code, course_title, lesson_plan_file):
+
+    lesson_plan = pd.read_excel(lesson_plan_file.name)
+    #lesson_per_week = num_lessons / 14
+
+    prompts = [
+        f"""
+        Generate exam questions with extremely short key-point answers based on the following:
+        1. Use topics from column B (Topic) in {lesson_plan}.
+        2. **Bloom's Taxonomy levels BTL1, BTL2,BTL3,BTL4,BTL5, BTL6** and **Difficulty Levels DL1,DL2,DL3**, learner level =Beginner.
+        3. find cartesian product of ([BTL1] * [DL1, DL2, DL3]) and generate **strictly 8 question from each combination** (**Total 24 questions**).
+        4. **Maximum Marks (MM) = BTL_number * DL_number**.
+        5. **Ensure ~40% numerical questions** where applicable.
+        6. **Include corresponding Course Outcome from column D.**
+        7.   Ensure that each question is generated using the corresponding Action verbs of Bloom's taxonomy levels as given below:
+             BTL1 (Remember): Recall, Recognize, Identify, Define, List, Name, Label, Retrieve, Describe, State.
+        ### **Output Format (Strict CSV)**
+        **Format:**
+        "[BTL]","[DL]","[Max Marks]","[Question]","[Answer]","[Course Outcome]"
+        """,
+        f"""
+        Generate exam questions with extremely short key-point answers based on the following:
+        1. Use topics from column B (Topic) in {lesson_plan}.
+        2. **Bloom's Taxonomy levels BTL1, BTL2,BTL3,BTL4,BTL5, BTL6** and **Difficulty Levels DL1,DL2,DL3**, learner level =Beginner.
+        3. find cartesian product of ([BTL1] * [DL1, DL2, DL3]) and generate **strictly 7 question from each combination** (**Total 21 questions**).
+        4. **Maximum Marks (MM) = BTL_number * DL_number**.
+        5. **Ensure ~40% numerical questions** where applicable.
+        6. **Include corresponding Course Outcome from column D.**
+        7.   Ensure that each question is generated using the corresponding Action verbs of Bloom's taxonomy levels as given below:
+             BTL1 (Remember): Recall, Recognize, Identify, Define, List, Name, Label, Retrieve, Describe, State.
+        ### **Output Format (Strict CSV)**
+        **Format:**
+        "[BTL]","[DL]","[Max Marks]","[Question]","[Answer]","[Course Outcome]"
+        """,
+        f"""
+        Generate exam questions with extremely short key-point answers based on the following:
+        1. Use topics from column B (Topic) in {lesson_plan}.
+        2. **Bloom's Taxonomy levels BTL1, BTL2,BTL3,BTL4,BTL5, BTL6** and **Difficulty Levels DL1,DL2,DL3**, learner level =Beginner.
+        3. find cartesian product of (BTL2 * DL1) and generate ** strictly 15 question from the combination**.
+        4. find cartesian product of ([BTL3] * [DL1, DL2, DL3]) and generate **strictly 5 question from each combination** (**Total 15 questions**).
+        3. find cartesian product of ([BTL4] * [DL1, DL2, DL3]) and generate **strictly 5 question from each combination** (**Total 15 questions**).
+        5. **Maximum Marks (MM) = BTL_number * DL_number**.
+        6. **Ensure ~40% numerical questions** where applicable.
+        7. **Include corresponding Course Outcome from column D.**
+        8.   Ensure that each question is generated using the corresponding Action verbs of Bloom's taxonomy levels as given below:
+             BTL2 (Understand): Classify, Compare, Contrast, Explain, Illustrate, Interpret, Paraphrase, Summarize, Demonstrate.
+             BTL3 (Apply): Apply, Change, Choose, Compute, Demonstrate, Discover, Dramatize, Employ, Illustrate, Interpret, Manipulate, Modify, Operate, Practice, Predict, Prepare, Produce, Relate, Show, Sketch, Solve, Use, Write.
+             BTL4 (Analyze): Analyze, Compare, Contrast, Differentiate, Distinguish, Examine, Experiment, Identify, Investigate, Test, Categorize.
+        ### **Output Format (Strict CSV- No header)**
+        **Format:**
+        "[BTL]","[DL]","[Max Marks]","[Question]","[Answer]","[Course Outcome]"
+        """,
+        f"""
+        Generate exam questions with extremely short key-point answers based on the following:
+        1. Use topics from column B (Topic) in {lesson_plan}.
+        2. **Bloom's Taxonomy levels BTL1, BTL2,BTL3,BTL4,BTL5, BTL6** and **Difficulty Levels DL1,DL2,DL3**, learner level =Beginner.
+        4. find cartesian product of ([BTL5] * [DL1, DL2, DL3]) and generate **strictly 5 question from each combination** (**Total 15 questions**).
+        5. find cartesian product of ([BTL6] * [DL1, DL2, DL3]) and generate **strictly 5 question from each combination** (**Total 15 questions**).
+        6. **Maximum Marks (MM) = BTL_number * DL_number**.
+        7. **Ensure ~40% numerical questions** where applicable.
+        8. **Include corresponding Course Outcome from column D.**
+        9.   Ensure that each question is generated using the corresponding Action verbs of Bloom's taxonomy levels as given below:
+             BTL5 (Evaluate): Assess, Appraise, Argue, Critique, Defend, Estimate, Evaluate, Judge, Justify, Predict, Rate, Select, Support, Validate, Verify.
+             BTL6 (Create): Assemble, Construct, Create, Design, Develop, Formulate, Generate, Invent, Modify, Plan, Produce, Rearrange, Rewrite, Transform.
+        ### **Output Format (Strict CSV - No header)**
+        **Format:**
+        "[BTL]","[DL]","[Max Marks]","[Question]","[Answer]","[Course Outcome]"
+        """
+    ]
+
+    output_file = f"/temp/QUBE_Data/QB/QBBeginner_{course_code}.xlsx"
+
+    # Find last Question_Number if file exists
+    """
+    if os.path.exists(output_file):
+        try:
+            existing_df = pd.read_csv(output_file)
+            last_question_number = existing_df["Question_Number"].max()
+        except:
+            last_question_number = 0  # If file is empty or corrupt
+    else:
+        last_question_number = 0  # If file doesn't exist
+    """
+    last_question_number = 0  # If file doesn't exist
+
+    all_data = []  # Store all generated questions before writing
+
+    for prompt in prompts:
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "You are an expert in exam question generation."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.5,
+            max_tokens=6000
+        )
+
+        question_text = response["choices"][0]["message"]["content"]
+
+        # Convert response into a pandas DataFrame
+        df = pd.read_csv(io.StringIO(question_text), sep=",",
+                        names=["BTL", "DL", "Maximum Marks", "Question", "Answer", "Course Outcome"],
+                        on_bad_lines='skip', engine='python', quotechar='"')
+
+        all_data.append(df)  # Collect the data
+
+    # Combine all responses into a single DataFrame
+    final_df = pd.concat(all_data, ignore_index=True)
+
+    # Generate Question_Number starting from the last one
+    final_df.insert(0, "Question_Number", range(last_question_number + 1, last_question_number + 1 + len(final_df)))
+
+    # Add Course_Code and Course_Title
+    final_df.insert(1, "Course_Code", course_code)
+    final_df.insert(2, "Course_Title", course_title)
+
+    # Write to CSV in one go
+    #final_df.to_csv(output_file, mode='w', index=False, header=True)
+#    csv_data = io.StringIO(output_file)  # Convert string to a file-like object
+
+# Read CSV into a Pandas DataFrame
+#    df = pd.read_csv(csv_data, sep=",", quotechar='"', on_bad_lines='skip')
+
+    # Save DataFrame as an Excel file
+#    excel_filename = f"/temp/QUBE_Data/CO/QB_excel{course_code}.xlsx"
+    final_df.to_excel(output_file, index=False, engine="openpyxl")
+
+    return output_file
+
+
+def generate_exam_questions_complete_Intermediate(course_code, course_title, lesson_plan_file):
+
+    lesson_plan = pd.read_excel(lesson_plan_file.name)
+    #lesson_per_week = num_lessons / 14
+
+    prompts = [
+        f"""
+        Generate exam questions with extremely short key-point answers based on the following:
+        1. Use topics from column B (Topic) in {lesson_plan}.
+        2. **Bloom's Taxonomy levels BTL1, BTL2,BTL3,BTL4,BTL5, BTL6** and **Difficulty Levels DL1,DL2,DL3**, learner level =Intermediate.
+        3. find cartesian product of ([BTL1] * [DL1, DL2, DL3]) and generate **strictly 7 question from each combination** (**Total 21 questions**).
+        4. **Maximum Marks (MM) = BTL_number * DL_number**.
+        5. **Ensure ~40% numerical questions** where applicable.
+        6. **Include corresponding Course Outcome from column D.**
+        7.   Ensure that each question is generated using the corresponding Action verbs of Bloom's taxonomy levels as given below:
+             BTL1 (Remember): Recall, Recognize, Identify, Define, List, Name, Label, Retrieve, Describe, State.
+        ### **Output Format (Strict CSV)**
+        **Format:**
+        "[BTL]","[DL]","[Max Marks]","[Question]","[Answer]","[Course Outcome]"
+        """,
+        f"""
+        Generate exam questions with extremely short key-point answers based on the following:
+        1. Use topics from column B (Topic) in {lesson_plan}.
+        2. **Bloom's Taxonomy levels BTL1, BTL2,BTL3,BTL4,BTL5, BTL6** and **Difficulty Levels DL1,DL2,DL3**, learner level =Intermediate.
+        3. find cartesian product of ([BTL1] * [DL1, DL2, DL3]) and generate **strictly 8 question from each combination** (**Total 24 questions**).
+        4. **Maximum Marks (MM) = BTL_number * DL_number**.
+        5. **Ensure ~40% numerical questions** where applicable.
+        6. **Include corresponding Course Outcome from column D.**
+        7.   Ensure that each question is generated using the corresponding Action verbs of Bloom's taxonomy levels as given below:
+             BTL1 (Remember): Recall, Recognize, Identify, Define, List, Name, Label, Retrieve, Describe, State.
+
+        ### **Output Format (Strict CSV)**
+        **Format:**
+        "[BTL]","[DL]","[Max Marks]","[Question]","[Answer]","[Course Outcome]"
+        """,
+        f"""
+        Generate exam questions with extremely short key-point answers based on the following:
+        1. Use topics from column B (Topic) in {lesson_plan}.
+        2. **Bloom's Taxonomy levels BTL1, BTL2,BTL3,BTL4,BTL5, BTL6** and **Difficulty Levels DL1,DL2,DL3**, learner level = Intermediate.
+        3. find cartesian product of (BTL2 * DL1) and generate ** strictly 15 question from the combination**.
+        4. **Maximum Marks (MM) = BTL_number * DL_number**.
+        5. **Ensure ~40% numerical questions** where applicable.
+        6. **Include corresponding Course Outcome from column D.**
+        7.   Ensure that each question is generated using the corresponding Action verbs of Bloom's taxonomy levels as given below:
+             BTL2(Understand): Classify, Compare, Contrast, Explain, Illustrate, Interpret, Paraphrase, Summarize, Demonstrate.
+        ### **Output Format (Strict CSV- No header)**
+        **Format:**
+        "[BTL]","[DL]","[Max Marks]","[Question]","[Answer]","[Course Outcome]"
+        """,
+        f"""
+        Generate exam questions with extremely short key-point answers based on the following:
+        1. Use topics from column B (Topic) in {lesson_plan}.
+        2. **Bloom's Taxonomy levels BTL1, BTL2,BTL3,BTL4,BTL5, BTL6** and **Difficulty Levels DL1,DL2,DL3**, learner level = Intermediate.
+        3. find cartesian product of ([BTL3] * [DL1, DL2, DL3]) and generate **strictly 5 question from each combination** (**Total 15 questions**).
+        4. find cartesian product of ([BTL4] * [DL1, DL2, DL3]) and generate **strictly 5 question from each combination** (**Total 15 questions**).
+        5. **Maximum Marks (MM) = BTL_number * DL_number**.
+        6. **Ensure ~40% numerical questions** where applicable.
+        7. **Include corresponding Course Outcome from column D.**
+        8.   Ensure that each question is generated using the corresponding Action verbs of Bloom's taxonomy levels as given below:
+              BTL3:(Apply): Apply, Change, Choose, Compute, Demonstrate, Discover, Dramatize, Employ, Illustrate, Interpret, Manipulate, Modify, Operate, Practice, Predict, Prepare, Produce, Relate, Show, Sketch, Solve, Use, Write.
+              BTL4 (Analyze): Analyze, Compare, Contrast, Differentiate, Distinguish, Examine, Experiment, Identify, Investigate, Test, Categorize.
+
+        ### **Output Format (Strict CSV - No header)**
+        **Format:**
+        "[BTL]","[DL]","[Max Marks]","[Question]","[Answer]","[Course Outcome]"
+        """,
+        f"""
+        Generate exam questions with extremely short key-point answers based on the following:
+        1. Use topics from column B (Topic) in {lesson_plan}.
+        2. **Bloom's Taxonomy levels BTL1, BTL2,BTL3,BTL4,BTL5, BTL6** and **Difficulty Levels DL1,DL2,DL3**, learner level = Intermediate.
+        3. find cartesian product of ([BTL5] * [DL1, DL2, DL3]) and generate **strictly 5 question from each combination** (**Total 15 questions**).
+        4. find cartesian product of ([BTL6] * [DL1, DL2, DL3]) and generate **strictly 5 question from each combination** (**Total 15 questions**).
+        5. **Maximum Marks (MM) = BTL_number * DL_number**.
+        6. **Ensure ~40% numerical questions** where applicable.
+        7. **Include corresponding Course Outcome from column D.**
+        8.   Ensure that each question is generated using the corresponding Action verbs of Bloom's taxonomy levels as given below:
+              BTL5 (Evaluate): Assess, Appraise, Argue, Critique, Defend,Evaluate, Estimate, Judge, Justify, Predict, Rate, Select, Support, Validate, Verify.
+              BTL6 (Create): Assemble, Construct, Create, Design, Develop, Formulate, Generate, Invent, Modify, Plan, Produce, Rearrange, Rewrite, Transform.
+        ### **Output Format (Strict CSV - No header)**
+        **Format:**
+        "[BTL]","[DL]","[Max Marks]","[Question]","[Answer]","[Course Outcome]"
+        """
+    ]
+
+    output_file = f"/temp/QUBE_Data/QB/QBIntermediate_{course_code}.xlsx"
+
+    # Find last Question_Number if file exists
+    """
+    if os.path.exists(output_file):
+        try:
+            existing_df = pd.read_csv(output_file)
+            last_question_number = existing_df["Question_Number"].max()
+        except:
+            last_question_number = 0  # If file is empty or corrupt
+    else:
+        last_question_number = 0  # If file doesn't exist
+    """
+    last_question_number = 0  # If file doesn't exist
+
+    all_data = []  # Store all generated questions before writing
+
+    for prompt in prompts:
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "You are an expert in exam question generation."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.5,
+            max_tokens=6000
+        )
+
+        question_text = response["choices"][0]["message"]["content"]
+
+        # Convert response into a pandas DataFrame
+        df = pd.read_csv(io.StringIO(question_text), sep=",",
+                        names=["BTL", "DL", "Maximum Marks", "Question", "Answer", "Course Outcome"],
+                        on_bad_lines='skip', engine='python', quotechar='"')
+
+        all_data.append(df)  # Collect the data
+
+    # Combine all responses into a single DataFrame
+    final_df = pd.concat(all_data, ignore_index=True)
+
+    # Generate Question_Number starting from the last one
+    final_df.insert(0, "Question_Number", range(last_question_number + 1, last_question_number + 1 + len(final_df)))
+
+    # Add Course_Code and Course_Title
+    final_df.insert(1, "Course_Code", course_code)
+    final_df.insert(2, "Course_Title", course_title)
+
+    # Write to CSV in one go
+    #final_df.to_csv(output_file, mode='w', index=False, header=True)
+#    csv_data = io.StringIO(output_file)  # Convert string to a file-like object
+
+# Read CSV into a Pandas DataFrame
+#    df = pd.read_csv(csv_data, sep=",", quotechar='"', on_bad_lines='skip')
+
+    # Save DataFrame as an Excel file
+#    excel_filename = f"/temp/QUBE_Data/CO/QB_excel{course_code}.xlsx"
+    final_df.to_excel(output_file, index=False, engine="openpyxl")
+
+    return output_file
+
+def generate_exam_questions_complete_Intermediate_Advance(course_code, course_title, lesson_plan_file):
+
+    lesson_plan = pd.read_excel(lesson_plan_file.name)
+    #lesson_per_week = num_lessons / 14
+
+    prompts = [
+        f"""
+        Generate exam questions with extremely short key-point answers based on the following:
+        1. Use topics from column B (Topic) in {lesson_plan}.
+        2. **Bloom's Taxonomy levels BTL1, BTL2,BTL3,BTL4,BTL5, BTL6** and **Difficulty Levels DL1,DL2,DL3**, learner level =Intermediate-Advanced.
+        3. find cartesian product of ([BTL3] * [DL1, DL2, DL3]) and generate **strictly 5 question from each combination** (**Total 15 questions**).
+        4. find cartesian product of ([BTL4] * [DL1, DL2, DL3]) and generate **strictly 5 question from each combination** (**Total 15 questions**).
+        5. **Maximum Marks (MM) = BTL_number * DL_number**.
+        6. **Ensure ~40% numerical questions** where applicable.
+        7. **Include corresponding Course Outcome from column D.**
+        8.   Ensure that each question is generated using the corresponding Action verbs of Bloom's taxonomy levels as given below:
+              BTL3 (Apply): Apply, Change, Choose, Compute, Demonstrate, Discover, Dramatize, Employ, Illustrate, Interpret, Manipulate, Modify, Operate, Practice, Predict, Prepare, Produce, Relate, Show, Sketch, Solve, Use, Write.
+              BTL4 (Analyze): Analyze, Compare, Contrast, Differentiate, Distinguish, Examine, Experiment, Identify, Investigate, Test, Categorize.
+        ### **Output Format (Strict CSV)**
+        **Format:**
+        "[BTL]","[DL]","[Max Marks]","[Question]","[Answer]","[Course Outcome]"
+        """,
+        f"""
+        Generate exam questions with extremely short key-point answers based on the following:
+        1. Use topics from column B (Topic) in {lesson_plan}.
+        2. **Bloom's Taxonomy levels BTL1, BTL2,BTL3,BTL4,BTL5, BTL6** and **Difficulty Levels DL1,DL2,DL3**, learner level =Intermediate-Advanced.
+        3. find cartesian product of ([BTL5] * [DL1, DL2, DL3]) and generate **strictly 5 question from each combination** (**Total 15 questions**).
+        4. find cartesian product of ([BTL6] * [DL1, DL2, DL3]) and generate **strictly 5 question from each combination** (**Total 15 questions**).
+        5. **Maximum Marks (MM) = BTL_number * DL_number**.
+        6. **Ensure ~40% numerical questions** where applicable.
+        7. **Include corresponding Course Outcome from column D.**
+        8.   Ensure that each question is generated using the corresponding Action verbs of Bloom's taxonomy levels as given below:
+              BTL5 (Evaluate): Assess, Appraise, Argue, Critique, Defend, Estimate, Evaluate, Judge, Justify, Predict, Rate, Select, Support, Validate, Verify.
+              BTL6 (Create): Assemble, Construct, Create, Design, Develop, Formulate, Generate, Invent, Modify, Plan, Produce, Rearrange, Rewrite, Transform.
+        ### **Output Format (Strict CSV)**
+        **Format:**
+        "[BTL]","[DL]","[Max Marks]","[Question]","[Answer]","[Course Outcome]"
+        """
+    ]
+
+    output_file = f"/temp/QUBE_Data/QB/QBInt_Adv_{course_code}.xlsx"
+
+    # Find last Question_Number if file exists
+    """
+    if os.path.exists(output_file):
+        try:
+            existing_df = pd.read_csv(output_file)
+            last_question_number = existing_df["Question_Number"].max()
+        except:
+            last_question_number = 0  # If file is empty or corrupt
+    else:
+        last_question_number = 0  # If file doesn't exist
+    """
+    last_question_number = 0  # If file doesn't exist
+
+    all_data = []  # Store all generated questions before writing
+
+    for prompt in prompts:
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "You are an expert in exam question generation."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.5,
+            max_tokens=6000
+        )
+
+        question_text = response["choices"][0]["message"]["content"]
+
+        # Convert response into a pandas DataFrame
+        df = pd.read_csv(io.StringIO(question_text), sep=",",
+                        names=["BTL", "DL", "Maximum Marks", "Question", "Answer", "Course Outcome"],
+                        on_bad_lines='skip', engine='python', quotechar='"')
+
+        all_data.append(df)  # Collect the data
+
+    # Combine all responses into a single DataFrame
+    final_df = pd.concat(all_data, ignore_index=True)
+
+    # Generate Question_Number starting from the last one
+    final_df.insert(0, "Question_Number", range(last_question_number + 1, last_question_number + 1 + len(final_df)))
+
+    # Add Course_Code and Course_Title
+    final_df.insert(1, "Course_Code", course_code)
+    final_df.insert(2, "Course_Title", course_title)
+
+    # Write to CSV in one go
+    #final_df.to_csv(output_file, mode='w', index=False, header=True)
+#    csv_data = io.StringIO(output_file)  # Convert string to a file-like object
+
+# Read CSV into a Pandas DataFrame
+#    df = pd.read_csv(csv_data, sep=",", quotechar='"', on_bad_lines='skip')
+
+    # Save DataFrame as an Excel file
+#    excel_filename = f"/temp/QUBE_Data/CO/QB_excel{course_code}.xlsx"
+    final_df.to_excel(output_file, index=False, engine="openpyxl")
+
+    return output_file
+
+
+def generate_exam_questions_complete_Advanced_Complex_prob(course_code, course_title, lesson_plan_file):
+
+    lesson_plan = pd.read_excel(lesson_plan_file.name)
+    #lesson_per_week = num_lessons / 14
+
+    prompts = [
+        f"""
+        Generate exam questions with extremely short key-point answers based on the following:
+        1. Use topics from column B (Topic) in {lesson_plan}.
+        2. **Bloom's Taxonomy levels BTL1, BTL2,BTL3,BTL4,BTL5, BTL6** and **Difficulty Levels(DL) = DL4**, learner level =Intermediate-Advanced.
+        3. Generate 20 complex problems from KL6 level.
+        4. **Ensure ~80% numerical or analytical questions**.
+        5. **Include corresponding Course Outcome from column D.**
+        6. Per question Marks=20.
+        7. Ensure that each question is generated using the corresponding Action verbs of Bloom's taxonomy levels as given below:
+           BTL6 (Create): Assemble, Construct,Create, Design, Develop, Formulate, Generate, Invent, Modify, Plan, Produce, Rearrange, Rewrite, Transform.
+        ### **Output Format (Strict CSV)**
+        **Format:**
+        "[BTL]","[DL]","[Marks]","[Question]","[Answer]","[Course Outcome]"
+        """
+    ]
+
+    output_file = f"/temp/QUBE_Data/QB/QBAdvCP_{course_code}.xlsx"
+
+    # Find last Question_Number if file exists
+    """
+    if os.path.exists(output_file):
+        try:
+            existing_df = pd.read_csv(output_file)
+            last_question_number = existing_df["Question_Number"].max()
+        except:
+            last_question_number = 0  # If file is empty or corrupt
+    else:
+        last_question_number = 0  # If file doesn't exist
+    """
+    last_question_number = 0  # If file doesn't exist
+
+    all_data = []  # Store all generated questions before writing
+
+    for prompt in prompts:
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "You are an expert in exam question generation."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.5,
+            max_tokens=6000
+        )
+
+        question_text = response["choices"][0]["message"]["content"]
+
+        # Convert response into a pandas DataFrame
+        df = pd.read_csv(io.StringIO(question_text), sep=",",
+                        names=["BTL", "DL", "Maximum Marks", "Question", "Answer", "Course Outcome"],
+                        on_bad_lines='skip', engine='python', quotechar='"')
+
+        all_data.append(df)  # Collect the data
+
+    # Combine all responses into a single DataFrame
+    final_df = pd.concat(all_data, ignore_index=True)
+
+    # Generate Question_Number starting from the last one
+    final_df.insert(0, "Question_Number", range(last_question_number + 1, last_question_number + 1 + len(final_df)))
+
+    # Add Course_Code and Course_Title
+    final_df.insert(1, "Course_Code", course_code)
+    final_df.insert(2, "Course_Title", course_title)
+
+    # Write to CSV in one go
+    #final_df.to_csv(output_file, mode='w', index=False, header=True)
+#    csv_data = io.StringIO(output_file)  # Convert string to a file-like object
+
+# Read CSV into a Pandas DataFrame
+#    df = pd.read_csv(csv_data, sep=",", quotechar='"', on_bad_lines='skip')
+
+    # Save DataFrame as an Excel file
+#    excel_filename = f"/temp/QUBE_Data/CO/QB_excel{course_code}.xlsx"
+    final_df.to_excel(output_file, index=False, engine="openpyxl")
+
+    return output_file
+
+
+
+# Gradio UI
+
+def ui():
+    # Define the subtype mapping
+    subtype_mapping = {
+        "Based on Purpose": {
+            "Factual": "Require specific answers based on facts",
+            "Conceptual": "Focus on understanding ideas or concepts",
+            "Analytical": "Require breaking down information into components to understand its structure",
+            "Evaluation": "Involve judgment and assessment based on evidence or criteria",
+            "Problem-Solving": "Pose a challenge that requires a solution",
+        },
+        "Based on Depth of Thinking": {
+            "Recall": "Test memory of facts or concepts",
+            "Comprehension": "Test understanding of meaning",
+            "Application": "Require applying knowledge to new situations",
+            "Analysis": "Require breaking down ideas or structures",
+            "Synthesis": "Require combining elements to form new ideas",
+            "Evaluation": "Require forming judgments",
+        },
+        "Based on Structure": {
+            "Open-Ended Questions": "Allow for elaborated responses",
+            "Closed-Ended Questions": "Have specific, limited answers",
+            "Multiple-Choice Questions": "Offer a selection of possible answers",
+            "True/False Questions": "Present statements to confirm",
+            "Fill-in-the-Blank Questions": "Require completing a sentence or idea",
+            "Matching Questions": "Require pairing related items",
+        },
+        "Based on Context": {
+            "Hypothetical Questions": "Explore what-if scenarios",
+            "Reflective Questions": "Encourage introspection and self-analysis",
+            "Leading Questions": "Steer the respondent toward a particular answer",
+            "Probing Questions": "Seek deeper answers or clarification",
+            "Rhetorical Questions": "Meant to provoke thought, not answers",
+        },
+        "Based on Contextual Application": {
+            "Diagnostic Questions": "Identify problems or gaps",
+            "Research Questions": "Guide investigations or studies.",
+            "Exploratory Questions": "Seek to discover new insights",
+            "Comparative Questions": "Compare two or more elements",
+            "Case-Based Questions": "Use a scenario for analysis or decision-making",
+        },
+    }
+
+    # Function to update subtype options based on selected question type
+    def update_subtypes(question_type):
+        if question_type in subtype_mapping:
+            subtypes = list(subtype_mapping[question_type].keys())
+            return gr.update(choices=subtypes, value=subtypes[0] if subtypes else None)
+        return gr.update(choices=[], value=None)
+
+    # Function to display description
+    def get_description(question_type, subtype):
+        return subtype_mapping.get(question_type, {}).get(subtype, "No description available.")
+
+    # Function to calculate marks based on BTL and DL values
+    def calculate_marks(blooms_level_value, difficulty_level_value):
+        BTL_mapping = {"Remember": 1, "Understand": 2, "Apply": 3, "Analyze": 4, "Evaluate": 5, "Create": 6}
+        DL_mapping = {"Easy": 1, "Medium": 2, "Hard": 3}
+        A=BTL_mapping.get(blooms_level_value, 1) * DL_mapping.get(difficulty_level_value, 1)
+        return A
+
+    with gr.Blocks() as demo:
+        gr.Markdown("## Course Outcome, Lesson Plan, and Question Bank Generator")
+
+        with gr.Tabs():  # ✅ Use gr.Tabs as a wrapper
+            with gr.Tab("Course Outcomes & Lesson Plan"):
+                course_code_input = gr.Textbox(label="Course Code1", interactive=True)
+                course_title_input = gr.Textbox(label="Course Title", interactive=True)
+                syllabus_input = gr.File(label="Upload Syllabus (PDF or DOCX)")
+                num_lectures_input = gr.Dropdown( label="Enter Number of Lectures", choices=[28, 42, 56, 70], value=42)
+                Num_CO_dropdown_Input = gr.Dropdown(choices=[4, 5, 6], label="Select number of COs required", value= 4)
+                outcome_button = gr.Button("Generate/Regenerate Course Outcomes")
+                outcomes_text_output = gr.Textbox(label="Generated Course Outcomes", interactive=True)
+                #co_file_output = gr.File(label="Download Course Outcomes")  # Now correctly linked
+
+                LP_button = gr.Button("Finalize Course Outcomes and Generate Lesson Plan")
+                lesson_file_output = gr.File(label="Download Lesson Plan")
+                co_file_path=gr.File(label="Download Course Outcomes")
+
+                # Bind Generate Course Outcomes button to both Textbox and File output
+                outcome_button.click(generate_course_outcomes, inputs=[syllabus_input, Num_CO_dropdown_Input] , outputs=outcomes_text_output)
+
+                # Bind Lesson Plan button
+                LP_button.click(generate_lesson_plan, inputs=[course_code_input, course_title_input, syllabus_input, num_lectures_input, outcomes_text_output], outputs= [co_file_path, lesson_file_output])
+
+            with gr.Tab("Generate Customized Questions"):
+
+                course_code_input = gr.Textbox(label="Course Code", interactive=True)
+                course_title_input = gr.Textbox(label="Course Title", interactive=True)
+                # Upload Lesson Plan
+                lesson_plan_input = gr.File(label="Upload Lesson Plan Excel File")
+
+                # Exam and Lesson Details
+                num_lessons_input = gr.Number(label="Number of Lessons", precision=0)
+                exam_name_input = gr.Dropdown(
+                    choices=["IA1", "MTE", "IA2", "ETE"], label="Select Exam Name"
+                )
+
+                # Bloom’s Level and Difficulty Level
+                blooms_level_input = gr.Dropdown(
+                    choices=["Remember", "Understand", "Apply", "Analyze", "Evaluate", "Create"], label="Select Bloom's Level"
+                )
+                difficulty_level_input = gr.Dropdown(
+                    choices=["Easy", "Medium", "Hard"], label="Select Difficulty Level"
+                )
+                marks_output = gr.Number(label="Computed Marks", precision=0, interactive=False, value= 1)
+
+                # Learner Level and Question Settings
+                learner_level_input = gr.Dropdown(
+                    choices=["Beginner", "Intermediate", "Intermediate-Advanced", "Advanced"], label="Select Learner Level"
+                )
+                num_questions_input = gr.Number(label="Enter Number of Questions", precision=0, value=1)
+
+                # Question Type and Subtype
+                question_type_input = gr.Dropdown(
+                    choices=["Based on Purpose", "Based on Depth of Thinking", "Based on Structure", "Based on Context", "Based on Contextual Application"],
+                    label="Select Question Type"
+                )
+                subtype_input = gr.Dropdown(choices=["Factual","Conceptual","Analytical","Evaluation","Problem-Solving"], label="Select Subtype", value ="Factual")
+                description_output = gr.Textbox(label="Description", interactive=False)
+
+                # Update subtype options dynamically
+                question_type_input.change(update_subtypes, question_type_input, subtype_input)
+                subtype_input.change(get_description, [question_type_input, subtype_input], description_output)
+
+                # Numerical Question Percentage
+                numerical_percentage_input = gr.Number(label="Enter Percentage of Numerical Questions", precision=0)
+
+                # Generate Questions Button
+                question_button = gr.Button("Generate Exam Questions")
+
+                # Output Fields for Questions, Answers, and Course Outcomes
+                questions_output = gr.Textbox(label="Generated Questions", interactive=True)
+                answers_output = gr.Textbox(label="Generated Answers", interactive=True)
+                course_outcomes_output = gr.Textbox(label="Generated Course Outcomes", interactive=True)
+
+                # Finalization Buttons and Outputs
+                generate_more_button = gr.Button("Finalize These Questions and Generate More")
+                finalized_questions_output = gr.Textbox(label="Finalized Questions", interactive=False)
+                finalized_answers_output = gr.Textbox(label="Finalized Answers", interactive=False)
+                finalized_course_outcomes_output = gr.Textbox(label="Finalized Course Outcomes", interactive=False)
+
+                # Auto-compute marks based on Bloom's Level and Difficulty Level
+                blooms_level_input.change(
+                    fn=lambda b, d: calculate_marks(b, d),
+                    inputs=[blooms_level_input, difficulty_level_input],
+                    outputs=marks_output
+                )
+
+                difficulty_level_input.change(
+                    fn=lambda b, d: calculate_marks(b, d),
+                    inputs=[blooms_level_input, difficulty_level_input],
+                    outputs=marks_output
+                )
+
+                # Function to generate questions, answers, and course outcomes
+                def generate_questions_and_answers(lesson_plan, num_lessons, exam_name, blooms_level, difficulty_level, learner_level, marks, num_questions, question_type, subtype, numerical_percentage):
+                    q_numbers, questions, course_outcomes, a_numbers, answers = generate_exam_questions(
+                        lesson_plan, num_lessons, exam_name, blooms_level, difficulty_level, learner_level, marks, num_questions, question_type, subtype, numerical_percentage
+                    )
+
+                    # Ensure each question, answer, and course outcome appears on a new line
+                    # Join question numbers with their respective questions
+                    questions_output_text = "\n".join(f"{q_num}: {q}" for q_num, q in zip(q_numbers, questions))
+
+                    # Join answer numbers with their respective answers
+                    answers_output_text = "\n".join(f"{a_num}: {a}" for a_num, a in zip(a_numbers, answers))
+
+                    # Join course outcomes normally
+                    course_outcomes_output_text = "\n".join(course_outcomes)
+
+                    return questions_output_text, course_outcomes_output_text, answers_output_text
+
+                question_button.click(
+                        fn= generate_questions_and_answers,
+                        inputs=[lesson_plan_input, num_lessons_input, exam_name_input, blooms_level_input, difficulty_level_input, learner_level_input, marks_output, num_questions_input, question_type_input, subtype_input, numerical_percentage_input],
+                        outputs=[questions_output, course_outcomes_output,answers_output]
+                    )
+
+                qb_download_button = gr.Button("Create QB Excel File")
+                qb_file_output = gr.File(label="Download Question Bank")  # ✅ Added output component
+
+
+                # Function to copy generated questions, answers, and course outcomes to finalized fields
+
+                def copy_to_finalized(questions, answers, course_outcomes, prev_questions, prev_answers, prev_course_outcomes):
+                    def resequence_text(prev_text, new_text):
+                        """Combines previous and new text, then reassigns sequence numbers from 1 to N."""
+                        combined_text = (prev_text + "\n" + new_text).strip() if prev_text else new_text.strip()
+                        lines = [line.split(":", 1)[1].strip() for line in combined_text.split("\n") if ":" in line]  # Extract content
+                        resequenced_lines = [f"{i+1}: {content}" for i, content in enumerate(lines)]  # Reassign sequence numbers
+                        return "\n".join(resequenced_lines)
+
+                    return (
+                        resequence_text(prev_questions, questions),
+                        resequence_text(prev_answers, answers),
+                        (prev_course_outcomes + "\n" + course_outcomes).strip() if prev_course_outcomes else course_outcomes.strip()
+                    )
+
+                def save_and_copy(
+                    course_code,
+                    course_title,
+                    question_type,
+                    marks,
+                    difficulty_level,
+                    blooms_level,
+                    questions_output,
+                    answers_output,
+                    course_outcomes_output,
+                    finalized_questions_output,
+                    finalized_answers_output,
+                    finalized_course_outcomes_output
+                ):
+                    # Call generate_excel() first
+                    generate_excel(
+                        course_code,
+                        course_title,
+                        question_type,
+                        marks,
+                        difficulty_level,
+                        blooms_level,
+                        questions_output,  # Pass finalized values
+                        answers_output,
+                        course_outcomes_output
+                    )
+
+                    # Then call copy_to_finalized()
+                    return copy_to_finalized(
+                        questions_output,
+                        answers_output,
+                        course_outcomes_output,
+                        finalized_questions_output,
+                        finalized_answers_output,
+                        finalized_course_outcomes_output
+                    )
+
+                # Update the button click event
+                generate_more_button.click(
+                    save_and_copy,  # Use the wrapper function
+                    inputs=[
+                        course_code_input,
+                        course_title_input,
+                        question_type_input,
+                        marks_output,
+                        difficulty_level_input,
+                        blooms_level_input,
+                        questions_output,
+                        answers_output,
+                        course_outcomes_output,
+                        finalized_questions_output,
+                        finalized_answers_output,
+                        finalized_course_outcomes_output
+                    ],
+                    outputs=[
+                        finalized_questions_output,
+                        finalized_answers_output,
+                        finalized_course_outcomes_output
+                    ]
+                )
+
+
+                def generate_excel(course_code, course_title, question_type, marks, difficulty_level, blooms_level, finalized_questions, finalized_answers, finalized_course_outcomes):
+                    # Convert string inputs (from Gradio) to lists if needed
+                    if isinstance(finalized_questions, str):
+                        finalized_questions = finalized_questions.split("\n")
+                    if isinstance(finalized_answers, str):
+                        finalized_answers = finalized_answers.split("\n")
+                    if isinstance(finalized_course_outcomes, str):
+                        finalized_course_outcomes = finalized_course_outcomes.split("\n")
+
+                    # Ensure lists
+                    finalized_questions = list(finalized_questions) if isinstance(finalized_questions, (list, tuple)) else [finalized_questions]
+                    finalized_answers = list(finalized_answers) if isinstance(finalized_answers, (list, tuple)) else [finalized_answers]
+                    finalized_course_outcomes = list(finalized_course_outcomes) if isinstance(finalized_course_outcomes, (list, tuple)) else [finalized_course_outcomes]
+
+                    # Determine max length
+                    max_length = max(len(finalized_questions), len(finalized_answers), len(finalized_course_outcomes))
+
+                    # Pad lists with empty values to match length
+                    finalized_questions.extend([""] * (max_length - len(finalized_questions)))
+                    finalized_answers.extend([""] * (max_length - len(finalized_answers)))
+                    finalized_course_outcomes.extend([""] * (max_length - len(finalized_course_outcomes)))
+
+                    # Define file path based on course_code
+                    file_path = f"/temp/QUBE_Data/QB/{course_code}.xlsx"
+
+                    # Check if file exists and determine the next sequence number
+                    if os.path.exists(file_path):
+                        existing_df = pd.read_excel(file_path, sheet_name="Sheet1")  # Read existing data
+                        last_seq_num = existing_df["Question Number"].max() if not existing_df.empty else 0
+                    else:
+                        existing_df = pd.DataFrame()  # Empty DataFrame if file doesn't exist
+                        last_seq_num = 0
+
+                    # Generate new question numbers starting from last sequence
+                    question_numbers = list(range(last_seq_num + 1, last_seq_num + max_length + 1))
+
+                    # Create new DataFrame
+                    df = pd.DataFrame({
+                        "Question Number": question_numbers,  # Continuous numbering
+                        "Course Code": [course_code] * max_length,
+                        "Course Title": [course_title] * max_length,
+                        "Bloom's Level": [blooms_level] * max_length,
+                        "Difficulty Level": [difficulty_level] * max_length,
+                        "Marks": [marks] * max_length,
+                        "Question Type": [question_type] * max_length,
+                        "Question": [q.split(":", 1)[1] if ":" in q else q for q in finalized_questions],
+                        "Answer": [a.split(":", 1)[1] if ":" in a else a for a in finalized_answers],
+                        "Course Outcome": [c.split(":", 1)[1] if ":" in c else c for c in finalized_course_outcomes]
+                    })
+
+                    # Append new data to existing data
+                    updated_df = pd.concat([existing_df, df], ignore_index=True)
+
+                    # Save to the Excel file
+                    if not os.path.exists(file_path):
+                        # Create a new Excel file with an empty DataFrame
+                        df = pd.DataFrame()
+                        with pd.ExcelWriter(file_path, engine="openpyxl") as writer:
+                            df.to_excel(writer, index=False)
+
+                    # Now open the file in append mode
+                    with pd.ExcelWriter(file_path, engine="openpyxl", mode="a", if_sheet_exists="overlay") as writer:
+                        # Your code to write data to the file
+                        updated_df.to_excel(writer, sheet_name="Sheet1", index=False)
+                    print("Data appended successfully!")
+                    return file_path  # ✅ Correctly returns file path for Gradio
+
+
+                # Ensure Gradio correctly triggers the download
+                def get_excel_file_path(course_code):
+                    """Returns the file path of the existing Excel file without modifying it."""
+                    file_path = f"{course_code}.xlsx"
+
+                    # Ensure the file exists before returning it
+                    if os.path.exists(file_path):
+                        return file_path
+                    else:
+                        return None  # Handle missing file scenario (optional: show error message)
+
+                # Modify the click event to only return the file path
+                qb_download_button.click(
+                    fn=get_excel_file_path,  # Calls only the function to fetch the file
+                    inputs=[course_code_input],  # Only requires course_code to get the correct file
+                    outputs=qb_file_output  # ✅ Correctly provides the file for download
+                )
+
+            with gr.Tab("Generate Complete Question Bank"):
+              course_code_input = gr.Textbox(label="Course Code", interactive=True)
+              course_title_input = gr.Textbox(label="Course Title", interactive=True)
+              lesson_plan_input = gr.File(label="Upload Lesson Plan Excel File")
+              #num_lessons_input = gr.Number(label="Number of Lessons", precision=0)
+              question_button = gr.Button("Generate Complete Question Bank")
+              #questions_output = gr.Dataframe(label="Generated Questions", interactive=True)
+              #download_button = gr.Button("Download CSV")
+              Allmerged_label = gr.Text(label="Download All Question")
+              file_output_merged = gr.File(value=None, interactive=False)
+              Beginner_label = gr.Text(label="Download Questions for Beginners")
+              file_output_beginner = gr.File(value=None, interactive=False)
+              Intermediate_label = gr.Text(label="Download Questions for Intermediate Level Learners")
+              file_output_intermediate = gr.File(value=None, interactive=False)
+              Int_Avd_label = gr.Text(label="Download Questions for Intermediate-Advanced Level Learners")
+              file_output_intermediate_advanced = gr.File(value=None, interactive=False)
+              Adv_CP_label = gr.Text(label="Download Complex Problems")
+              file_output_advanced_CP = gr.File(value=None, interactive=False)
+
+
+
+              def generate_exam_questions_complete(course_code, course_title, lesson_plan):
+                  # Generate file paths for different difficulty levels
+                  excel_filepath_beginner = generate_exam_questions_complete_Beginner(course_code, course_title, lesson_plan)
+                  excel_filepath_intermediate = generate_exam_questions_complete_Intermediate(course_code, course_title, lesson_plan)
+                  excel_filepath_Int_adv = generate_exam_questions_complete_Intermediate_Advance(course_code, course_title, lesson_plan)
+                  excel_filepath_AdvCP = generate_exam_questions_complete_Advanced_Complex_prob(course_code, course_title, lesson_plan)
+
+                  # Read each Excel file into a DataFrame
+                  df_beginner = pd.read_excel(excel_filepath_beginner)
+                  df_intermediate = pd.read_excel(excel_filepath_intermediate)
+                  df_Int_adv = pd.read_excel(excel_filepath_Int_adv)
+                  df_AdvCP = pd.read_excel(excel_filepath_AdvCP)
+
+                  # Add a new column to indicate the difficulty level for better tracking
+                  df_beginner["Level"] = "Beginner"
+                  df_intermediate["Level"] = "Intermediate"
+                  df_Int_adv["Level"] = "Intermediate-Advanced"
+                  df_AdvCP["Level"] = "Advanced-Complex"
+
+                  # Concatenate all DataFrames into a single DataFrame
+                  merged_df = pd.concat([df_beginner, df_intermediate, df_Int_adv, df_AdvCP], ignore_index=True)
+                  merged_df.iloc[:, 0] = range(1, len(merged_df) + 1)
+                  # Define the output file path
+                  merged_excel_filepath = f"/temp/QUBE_Data/complete_QB/{course_code}.xlsx"
+
+                  # Save the merged DataFrame into a **single worksheet**
+                  merged_df.to_excel(merged_excel_filepath, sheet_name="All Questions", index=False)
+
+                  # Return paths of all individual and merged files
+                  return (excel_filepath_beginner, excel_filepath_intermediate, excel_filepath_Int_adv, excel_filepath_AdvCP, merged_excel_filepath)
+
+              question_button.click(
+                  generate_exam_questions_complete,
+                  inputs=[course_code_input, course_title_input, lesson_plan_input],
+                  outputs=[file_output_beginner,file_output_intermediate,file_output_intermediate_advanced,file_output_advanced_CP,file_output_merged]
+              )
+
+    return demo
+
+
+# Launch Gradio app
+demo = ui()
+demo.launch(share=True, inline=False, debug=True)
 
