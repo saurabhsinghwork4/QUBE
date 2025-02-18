@@ -1,14 +1,9 @@
 openai==0.28
 pyngrok
-pyngrok gradio flask openai
-wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
-unzip ngrok-stable-linux-amd64.zip
-flask flask-ngrok openai
-xlsxwriter
 gradio
+flask
+flask-ngrok
+xlsxwriter
 pymupdf
 PyPDF2==2.12.1
--y ngrok
-
-# Set up ngrok authentication (Replace with your actual auth token)
-ngrok authtoken 2sCMmR3HJGWtXHTBOqSSElLFKKO_V7K9o9SVZnR6TC5tD6ki
+gunicorn  # Required for deployment on Render
