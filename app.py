@@ -31,7 +31,7 @@ import io
 from PyPDF2 import PdfReader
 
 # Set OpenAI API key (Ensure to set this environment variable before running)
-openai.api_key = "OPENAI_API_KEY"
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 # Start ngrok tunnel
